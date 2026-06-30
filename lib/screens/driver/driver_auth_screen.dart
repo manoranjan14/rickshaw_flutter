@@ -62,6 +62,8 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
           SnackBar(
             content: Text(e.toString().replaceAll('Exception: ', '')),
             backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
         );
       }
@@ -82,9 +84,11 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful! Please sign in.'),
+          SnackBar(
+            content: const Text('Registration successful! Please sign in.'),
             backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
         );
         _tabController.animateTo(0);
@@ -95,6 +99,8 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
           SnackBar(
             content: Text(e.toString().replaceAll('Exception: ', '')),
             backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
         );
       }
@@ -105,37 +111,40 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: const Color(0xFF0B0F19), // Match the onboarding background
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white70),
-          onPressed: () => Navigator.pop(context),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+          child: CircleAvatar(
+            backgroundColor: Colors.white.withValues(alpha: 0.05),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
         ),
       ),
-      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // Background Slate
-          Container(color: const Color(0xFF0F172A)),
-
-          // Glow Background circles (Amber/Gold for Driver theme)
+          // Background Glow (Amber/Yellow theme for Driver)
           Positioned(
-            top: -50,
+            top: -100,
             right: -50,
             child: Container(
-              width: size.width * 0.7,
-              height: size.width * 0.7,
-              decoration: BoxDecoration(
+              width: size.width * 0.85,
+              height: size.width * 0.85,
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFF59E0B).withOpacity(0.1),
+                color: Color(0x15F59E0B),
               ),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+                filter: ImageFilter.blur(sigmaX: 90, sigmaY: 90),
                 child: Container(),
               ),
             ),
@@ -143,76 +152,130 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
 
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
-                  // Header Title
-                  Text(
-                    'Driver Portal',
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
+                  // Header Block (Driver Style)
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: const Color(0xFFF59E0B).withValues(alpha: 0.25),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.sports_motorsports_rounded,
+                        size: 40,
+                        color: Color(0xFFFBBF24),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Driver Hub',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
                       color: Colors.white,
                       letterSpacing: 0.5,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    'Access driver tools and find passengers',
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                  const Text(
+                    'Access your driver partner account to accept rides',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       color: Colors.white54,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 36),
 
-                  // Tab switcher Container
+                  // Pill-style Tab Switcher
                   Container(
                     height: 56,
+                    padding: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.04),
-                      borderRadius: BorderRadius.circular(16.0),
-                      border: Border.all(color: Colors.white.withOpacity(0.05)),
+                      color: Colors.white.withValues(alpha: 0.03),
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
                     ),
                     child: TabBar(
                       controller: _tabController,
-                      indicatorColor: Colors.transparent,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      dividerColor: Colors.transparent,
                       labelColor: Colors.white,
                       unselectedLabelColor: Colors.white38,
                       indicator: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(14.0),
+                        borderRadius: BorderRadius.circular(16.0),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFD97706).withOpacity(0.3),
-                            blurRadius: 10,
+                            color: const Color(0xFFD97706).withValues(alpha: 0.35),
+                            blurRadius: 12,
                             offset: const Offset(0, 4),
                           )
                         ],
                       ),
                       tabs: const [
-                        Tab(child: Text('Sign In', style: TextStyle(fontWeight: FontWeight.w700))),
-                        Tab(child: Text('Register', style: TextStyle(fontWeight: FontWeight.w700))),
+                        Tab(child: Text('Sign In', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
+                        Tab(child: Text('Register', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
                       ],
                     ),
                   ),
                   const SizedBox(height: 32),
 
-                  // Forms Container
-                  SizedBox(
-                    height: size.height * 0.55,
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        // Login Tab View
-                        _buildLoginForm(),
-                        // Register Tab View
-                        _buildRegisterForm(),
+                  // Dynamic Form Card (Glassmorphic)
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.0),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.08),
+                        width: 1.0,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        )
                       ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30.0),
+                      child: GlassPanel(
+                        opacity: 0.04,
+                        padding: const EdgeInsets.all(24.0),
+                        borderRadius: BorderRadius.circular(30.0),
+                        child: AnimatedBuilder(
+                          animation: _tabController.animation!,
+                          builder: (context, child) {
+                            return SizedBox(
+                              height: _tabController.index == 0 ? 250 : 330,
+                              child: TabBarView(
+                                controller: _tabController,
+                                physics: const NeverScrollableScrollPhysics(), // Managed strictly by tabs
+                                children: [
+                                  _buildLoginForm(),
+                                  _buildRegisterForm(),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -229,10 +292,11 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
       key: _loginFormKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: [
           _buildTextField(
             controller: _loginEmailController,
-            label: 'Driver Email Address',
+            label: 'Email Address',
             icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
@@ -255,9 +319,9 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
               return null;
             },
           ),
-          const SizedBox(height: 40),
+          const Spacer(),
           CustomButton(
-            text: 'Sign In as Driver',
+            text: 'Sign In',
             isLoading: _isLoading,
             onPressed: _handleLogin,
             gradient: const [Color(0xFFF59E0B), Color(0xFFD97706)],
@@ -272,10 +336,11 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
       key: _registerFormKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: [
           _buildTextField(
             controller: _registerEmailController,
-            label: 'Driver Email Address',
+            label: 'Email Address',
             icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
@@ -286,7 +351,7 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
               return null;
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           _buildTextField(
             controller: _registerPasswordController,
             label: 'Password',
@@ -298,7 +363,7 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
               return null;
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           _buildTextField(
             controller: _registerConfirmPasswordController,
             label: 'Confirm Password',
@@ -312,9 +377,9 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
               return null;
             },
           ),
-          const SizedBox(height: 32),
+          const Spacer(),
           CustomButton(
-            text: 'Create Driver Account',
+            text: 'Create Account',
             isLoading: _isLoading,
             onPressed: _handleRegister,
             gradient: const [Color(0xFFF59E0B), Color(0xFFD97706)],
@@ -334,27 +399,25 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(18.0),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
         validator: validator,
-        style: const TextStyle(color: Colors.white, fontSize: 15.0),
+        style: const TextStyle(color: Colors.white, fontSize: 15.0, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.white38, fontSize: 14.0),
-          prefixIcon: Icon(icon, color: Colors.white38, size: 20),
+          labelStyle: const TextStyle(color: Colors.white38, fontSize: 13.0, fontWeight: FontWeight.w500),
+          prefixIcon: Icon(icon, color: const Color(0xFFFBBF24), size: 20),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 12),
+          errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 11),
         ),
       ),
     );
   }
 }
-
-// Helper import for Blur

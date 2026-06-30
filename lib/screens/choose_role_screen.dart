@@ -11,128 +11,147 @@ class ChooseRoleScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: const Color(0xFF0B0F19), // Ultra-premium deep slate/black
       body: Stack(
         children: [
-          // Background Gradient and decorative blur circles
-          Container(
-            color: const Color(0xFF0F172A),
-          ),
+          // Radial glow background effects (Uber/Ola styling)
           Positioned(
-            top: -100,
-            left: -100,
+            top: -120,
+            left: -80,
             child: Container(
-              width: size.width * 0.8,
-              height: size.width * 0.8,
-              decoration: BoxDecoration(
+              width: size.width * 0.9,
+              height: size.width * 0.9,
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: theme.colorScheme.primary.withOpacity(0.12),
+                color: Color(0x1F6366F1), // Indigo soft glow
               ),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
                 child: Container(),
               ),
             ),
           ),
           Positioned(
-            bottom: -50,
-            right: -50,
+            bottom: -150,
+            right: -80,
             child: Container(
-              width: size.width * 0.7,
-              height: size.width * 0.7,
-              decoration: BoxDecoration(
+              width: size.width * 0.9,
+              height: size.width * 0.9,
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: theme.colorScheme.secondary.withOpacity(0.08),
+                color: Color(0x1AF59E0B), // Amber soft glow (Rapido yellow vibe)
               ),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
                 child: Container(),
               ),
             ),
           ),
 
-          // Main Content
+          // Main Onboarding Layout
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Spacer(),
-                  // Brand Header
+                  const Spacer(flex: 1),
+
+                  // Brand Hero Header
                   Column(
                     children: [
+                      // Golden Auto-Rickshaw Capsule Icon
                       Container(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(22.0),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.secondary.withOpacity(0.1),
+                          color: const Color(0x15F59E0B), // Rapido Yellow hint
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: theme.colorScheme.secondary.withOpacity(0.2),
-                            width: 1.5,
+                            color: const Color(0x35F59E0B),
+                            width: 2.0,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                              blurRadius: 30,
+                              spreadRadius: 5,
+                            )
+                          ],
                         ),
-                        child: Icon(
-                          Icons.local_taxi,
-                          size: 48,
-                          color: theme.colorScheme.secondary,
+                        child: const Icon(
+                          Icons.local_taxi_rounded,
+                          size: 56,
+                          color: Color(0xFFF59E0B), // Rapido Accent Yellow
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Text(
+                      const SizedBox(height: 28),
+                      // App Name
+                      const Text(
                         'Rickshaww',
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w900,
                           color: Colors.white,
-                          letterSpacing: 1.0,
+                          letterSpacing: 0.8,
+                          fontFamily: 'Montserrat', // Modern look
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Premium Ride Booking & Tracking App',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white70,
-                          letterSpacing: 0.5,
+                      const SizedBox(height: 10),
+                      // Tagline
+                      const Text(
+                        'Modern, Safe & Instant Rickshaw Booking',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white54,
+                          letterSpacing: 0.3,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
-                  const Spacer(),
 
-                  Text(
-                    'CHOOSE YOUR ROLE',
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: Colors.white38,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1.5,
+                  const Spacer(flex: 2),
+
+                  // Onboarding Options Title
+                  const Text(
+                    'GET STARTED AS',
+                    style: TextStyle(
+                      color: Colors.white30,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12.0,
+                      letterSpacing: 2.0,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
-                  // Passenger Option Card
+                  // Passenger Selector Card
                   _RoleCard(
-                    title: 'Passenger',
-                    description: 'Book rides, track rickshaws, and travel comfortably.',
-                    icon: Icons.person_pin_circle_outlined,
-                    gradientColors: [const Color(0xFF6366F1), const Color(0xFF4F46E5)],
+                    title: 'Book a Ride',
+                    subtitle: 'Passenger',
+                    description: 'Get affordable, doorstep auto-rickshaws. Fast, secure, and tracked live.',
+                    icon: Icons.person_pin_circle_rounded,
+                    accentColor: const Color(0xFF6366F1), // Indigo
                     onTap: () {
                       Navigator.pushNamed(context, '/passenger-auth');
                     },
                   ),
                   const SizedBox(height: 20),
 
-                  // Driver Option Card
+                  // Driver Selector Card
                   _RoleCard(
-                    title: 'Driver',
-                    description: 'Accept passenger requests, find rides, and earn.',
-                    icon: Icons.directions_car_filled_outlined,
-                    gradientColors: [const Color(0xFFF59E0B), const Color(0xFFD97706)],
+                    title: 'Drive & Earn',
+                    subtitle: 'Driver Partner',
+                    description: 'Accept local rides, view pickup locations, and track earnings instantly.',
+                    icon: Icons.sports_motorsports_rounded, // Motorsports/driver vibe
+                    accentColor: const Color(0xFFF59E0B), // Gold Yellow
                     onTap: () {
                       Navigator.pushNamed(context, '/driver-auth');
                     },
                   ),
-                  const Spacer(),
+
+                  const Spacer(flex: 1),
                 ],
               ),
             ),
@@ -143,21 +162,22 @@ class ChooseRoleScreen extends StatelessWidget {
   }
 }
 
-// Helper Widget for _RoleCard
-
+// Custom Role Card widget matching Rapido/Uber card sheets
 class _RoleCard extends StatelessWidget {
   final String title;
+  final String subtitle;
   final String description;
   final IconData icon;
-  final List<Color> gradientColors;
+  final Color accentColor;
   final VoidCallback onTap;
 
   const _RoleCard({
     Key? key,
     required this.title,
+    required this.subtitle,
     required this.description,
     required this.icon,
-    required this.gradientColors,
+    required this.accentColor,
     required this.onTap,
   }) : super(key: key);
 
@@ -165,87 +185,115 @@ class _RoleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24.0),
+        borderRadius: BorderRadius.circular(28.0),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1.0,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
           )
         ],
       ),
-      child: GlassPanel(
-        opacity: 0.05,
-        padding: EdgeInsets.zero,
-        borderRadius: BorderRadius.circular(24.0),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(24.0),
-            splashColor: gradientColors.first.withOpacity(0.1),
-            highlightColor: gradientColors.first.withOpacity(0.05),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                children: [
-                  // Icon container with gradient background
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: gradientColors,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28.0),
+        child: GlassPanel(
+          opacity: 0.04,
+          padding: EdgeInsets.zero,
+          borderRadius: BorderRadius.circular(28.0),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              splashColor: accentColor.withValues(alpha: 0.15),
+              highlightColor: accentColor.withValues(alpha: 0.08),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 26.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Icon Capsule
+                    Container(
+                      width: 58,
+                      height: 58,
+                      decoration: BoxDecoration(
+                        color: accentColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: accentColor.withValues(alpha: 0.3),
+                          width: 1.5,
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: [
-                        BoxShadow(
-                          color: gradientColors.first.withOpacity(0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        )
-                      ],
+                      child: Icon(
+                        icon,
+                        color: accentColor,
+                        size: 30,
+                      ),
                     ),
-                    child: Icon(
-                      icon,
-                      color: Colors.white,
-                      size: 32,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  // Text information
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w700,
+                    const SizedBox(width: 20),
+                    // Details
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                title,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: accentColor.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  subtitle.toUpperCase(),
+                                  style: TextStyle(
+                                    color: accentColor,
+                                    fontSize: 9.0,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          description,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
-                            fontSize: 13.0,
-                            height: 1.4,
+                          const SizedBox(height: 8),
+                          Text(
+                            description,
+                            style: const TextStyle(
+                              color: Colors.white60,
+                              fontSize: 13.0,
+                              height: 1.4,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: Colors.white.withOpacity(0.3),
-                    size: 24,
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    // Action arrow
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.white30,
+                        size: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

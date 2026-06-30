@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -25,7 +26,7 @@ class PassengerHomeScreen extends StatefulWidget {
   State<PassengerHomeScreen> createState() => _PassengerHomeScreenState();
 }
 
-class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
+class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerProviderStateMixin {
   final MapController _mapController = MapController();
   final DatabaseService _dbService = DatabaseService();
 
@@ -44,14 +45,25 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
   double _rideCost = 0.0;
   bool _isGeocoding = false;
 
+  // UI State: selected category (Eco, Premium, Shared)
+  String _selectedCategory = 'Eco';
+
+  // Animation controller for search radar pulse
+  late AnimationController _radarController;
+
   @override
   void initState() {
     super.initState();
     _determinePosition();
+    _radarController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
   }
 
   @override
   void dispose() {
+    _radarController.dispose();
     _rideSubscription?.cancel();
     super.dispose();
   }
@@ -165,16 +177,26 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
     // Calculate Haversine distance
     final Distance distance = const Distance();
     final double meter = distance(_pickupLocation!, _dropLocation!);
+    _rideDistance = meter / 1000.0;
+    _updatePricing();
+  }
+
+  void _updatePricing() {
     setState(() {
-      _rideDistance = meter / 1000.0;
-      _rideCost = _rideDistance * 50.0; // 50 Rupees per km
+      if (_selectedCategory == 'Eco') {
+        _rideCost = _rideDistance * 12.0 + 40.0; // Min ₹40, ₹12/km
+      } else if (_selectedCategory == 'Premium') {
+        _rideCost = _rideDistance * 15.0 + 60.0; // Min ₹60, ₹15/km
+      } else {
+        _rideCost = _rideDistance * 8.0 + 25.0; // Min ₹25, ₹8/km
+      }
     });
   }
 
   // Request a Ride
   Future<void> _requestRide() async {
     if (_pickupLocation == null || _dropLocation == null) return;
-    
+
     final authService = Provider.of<AuthService>(context, listen: false);
     final userId = authService.currentUser?.uid ?? 'unknown_user';
 
@@ -215,7 +237,11 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
           _currentState = PassengerState.activeRide;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('A driver has accepted your ride request!'), backgroundColor: Colors.indigo),
+          const SnackBar(
+            content: Text('A driver has accepted your ride request!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
         );
       } else if (ride.status == 'Completed') {
         _showRideCompletedDialog();
@@ -245,7 +271,10 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
       _rideCost = 0.0;
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
 
@@ -255,13 +284,16 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E293B),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
+        backgroundColor: const Color(0xFF131926),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28.0),
+          side: const BorderSide(color: Colors.white10),
+        ),
         title: Row(
           children: const [
-            Icon(Icons.check_circle_outline, color: Colors.greenAccent, size: 28),
+            Icon(Icons.stars_rounded, color: Color(0xFFFBBF24), size: 30),
             SizedBox(width: 12),
-            Text('Ride Completed', style: TextStyle(color: Colors.white)),
+            Text('Ride Completed!', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
           ],
         ),
         content: Column(
@@ -269,13 +301,27 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Thank you for using Rickshaww! Your ride has been successfully completed.',
-              style: TextStyle(color: Colors.white70),
+              'Thank you for riding with Rickshaww. Hope you had a comfortable journey!',
+              style: TextStyle(color: Colors.white70, height: 1.4),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Total Cost: ₹${_rideCost.toStringAsFixed(2)}',
-              style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 18),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.03),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Total Fare Paid', style: TextStyle(color: Colors.white38, fontSize: 13, fontWeight: FontWeight.bold)),
+                  Text(
+                    '₹${_rideCost.toStringAsFixed(2)}',
+                    style: const TextStyle(color: Color(0xFFFBBF24), fontWeight: FontWeight.w900, fontSize: 22),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -291,7 +337,10 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                 _rideCost = 0.0;
               });
             },
-            child: const Text('OK', style: TextStyle(color: Colors.indigoAccent, fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Done',
+              style: TextStyle(color: Color(0xFF818CF8), fontWeight: FontWeight.w800, fontSize: 16),
+            ),
           ),
         ],
       ),
@@ -308,26 +357,27 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-
     // Compile map markers
     final markers = <Marker>[];
     if (_pickupLocation != null) {
       markers.add(
         Marker(
           point: _pickupLocation!,
-          width: 60,
-          height: 60,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(color: Colors.indigo, shape: BoxShape.circle),
-                child: const Icon(Icons.person_pin, color: Colors.white, size: 20),
+          width: 50,
+          height: 50,
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFF818CF8).withValues(alpha: 0.25),
+              shape: BoxShape.circle,
+            ),
+            padding: const EdgeInsets.all(8),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFF6366F1),
+                shape: BoxShape.circle,
               ),
-              const Icon(Icons.arrow_drop_down, color: Colors.indigo, size: 15),
-            ],
+              child: const Icon(Icons.my_location_rounded, color: Colors.white, size: 18),
+            ),
           ),
         ),
       );
@@ -336,17 +386,21 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
       markers.add(
         Marker(
           point: _dropLocation!,
-          width: 60,
-          height: 60,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle),
-                child: const Icon(Icons.location_on, color: Colors.white, size: 20),
+          width: 50,
+          height: 50,
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFEF4444).withValues(alpha: 0.25),
+              shape: BoxShape.circle,
+            ),
+            padding: const EdgeInsets.all(8),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFFEF4444),
+                shape: BoxShape.circle,
               ),
-              const Icon(Icons.arrow_drop_down, color: Colors.redAccent, size: 15),
-            ],
+              child: const Icon(Icons.place_rounded, color: Colors.white, size: 18),
+            ),
           ),
         ),
       );
@@ -359,7 +413,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: _pickupLocation ?? const LatLng(20.5937, 78.9629), // default center of India
+              initialCenter: _pickupLocation ?? const LatLng(20.5937, 78.9629),
               initialZoom: 15.0,
               onLongPress: _onMapLongPress,
             ),
@@ -367,14 +421,14 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
               TileLayer(
                 urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 subdomains: const ['a', 'b', 'c'],
-                userAgentPackageName: 'com.example.rickshawflutter',
+                userAgentPackageName: 'com.example.myapplication',
               ),
               if (_pickupLocation != null && _dropLocation != null)
                 PolylineLayer(
                   polylines: [
                     Polyline(
                       points: [_pickupLocation!, _dropLocation!],
-                      color: Colors.indigo,
+                      color: const Color(0xFF6366F1),
                       strokeWidth: 4.5,
                     ),
                   ],
@@ -383,58 +437,105 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
             ],
           ),
 
-          // Custom Top App Bar (Floating)
-          Positioned(
-            top: 50,
-            left: 20,
-            right: 20,
-            child: Row(
-              children: [
-                // Logout Button / Menu
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0F172A).withOpacity(0.85),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withOpacity(0.08)),
+          // Uber-style Floating Top Header (Profile + Search Input)
+          if (_currentState == PassengerState.idle)
+            Positioned(
+              top: 54,
+              left: 20,
+              right: 20,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28.0),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    width: 1.0,
                   ),
-                  child: IconButton(
-                    icon: const Icon(Icons.logout_rounded, color: Colors.white70),
-                    onPressed: _handleLogout,
-                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.25),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    )
+                  ],
                 ),
-                const SizedBox(width: 12),
-                // Heading Indicator Box
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0F172A).withOpacity(0.85),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white.withOpacity(0.08)),
-                    ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(28.0),
+                  child: GlassPanel(
+                    opacity: 0.08,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    borderRadius: BorderRadius.circular(28.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.gps_fixed, color: Colors.indigoAccent, size: 16),
-                        SizedBox(width: 8),
-                        Text(
-                          'Double-Tap Map to Set Drop Pin',
-                          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                      children: [
+                        // Profile Avatar / Logout trigger
+                        GestureDetector(
+                          onTap: _handleLogout,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundColor: const Color(0xFF6366F1).withValues(alpha: 0.15),
+                            child: const Icon(Icons.logout_rounded, color: Color(0xFF818CF8), size: 18),
+                          ),
                         ),
+                        const SizedBox(width: 14),
+                        // Simulated Search Bar
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Where to?',
+                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'Long-press map to drop destination pin',
+                                style: TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.search_rounded, color: Colors.white54),
                       ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
 
-          // Floating Action Button for current location centering
+          // Target Pin Info Tooltip (Only shown during active pin selecting or confirmation)
+          if (_currentState == PassengerState.confirmation)
+            Positioned(
+              top: 54,
+              left: 20,
+              right: 20,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF131926).withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.location_searching_rounded, color: Color(0xFFEF4444), size: 14),
+                      SizedBox(width: 8),
+                      Text(
+                        'Confirming Destination Pin',
+                        style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+          // Centering GPS FAB
           Positioned(
             right: 20,
-            bottom: _currentState == PassengerState.idle ? 40 : 250,
+            bottom: _currentState == PassengerState.idle ? 40 : 340,
             child: FloatingActionButton(
-              backgroundColor: const Color(0xFF0F172A),
+              backgroundColor: const Color(0xFF131926),
               foregroundColor: Colors.white,
               elevation: 4,
               shape: const CircleBorder(),
@@ -443,173 +544,475 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                   _mapController.move(_pickupLocation!, 16.5);
                 }
               },
-              child: const Icon(Icons.my_location),
+              child: const Icon(Icons.gps_fixed_rounded, color: Color(0xFF818CF8)),
             ),
           ),
 
-          // Glassmorphic Overlays (Floating panels at the bottom)
+          // Ola/Uber Style Bottom Sheets
           if (_currentState == PassengerState.confirmation)
             Positioned(
-              bottom: 24,
-              left: 20,
-              right: 20,
-              child: _buildConfirmationPanel(theme),
+              bottom: 20,
+              left: 16,
+              right: 16,
+              child: _buildConfirmationPanel(),
             ),
 
           if (_currentState == PassengerState.waiting)
             Positioned(
-              bottom: 24,
-              left: 20,
-              right: 20,
-              child: _buildWaitingPanel(theme),
+              bottom: 20,
+              left: 16,
+              right: 16,
+              child: _buildWaitingPanel(),
             ),
 
           if (_currentState == PassengerState.activeRide)
             Positioned(
-              bottom: 24,
-              left: 20,
-              right: 20,
-              child: _buildActiveRidePanel(theme),
+              bottom: 20,
+              left: 16,
+              right: 16,
+              child: _buildActiveRidePanel(),
             ),
         ],
       ),
     );
   }
 
-  Widget _buildConfirmationPanel(ThemeData theme) {
-    return GlassPanel(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: Colors.indigo.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
-                child: const Text('RIDE OVERVIEW', style: TextStyle(color: Colors.indigoAccent, fontWeight: FontWeight.bold, fontSize: 10)),
-              ),
-              const Spacer(),
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: const Icon(Icons.close_rounded, color: Colors.white38),
-                onPressed: () => setState(() => _currentState = PassengerState.idle),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Location Details
-          _buildAddressRow(Icons.radio_button_checked, Colors.indigoAccent, 'Pickup', _pickupAddress),
-          const SizedBox(height: 12),
-          _buildAddressRow(Icons.place, Colors.redAccent, 'Drop-off', _dropAddress, isLoading: _isGeocoding),
-          const Divider(color: Colors.white12, height: 24),
-          // Cost Details
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Estimated Cost', style: TextStyle(color: Colors.white38, fontSize: 12)),
-                  const SizedBox(height: 4),
-                  Text('₹${_rideCost.toStringAsFixed(2)}', style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text('Distance', style: TextStyle(color: Colors.white38, fontSize: 12)),
-                  const SizedBox(height: 4),
-                  Text('${_rideDistance.toStringAsFixed(1)} km', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          CustomButton(
-            text: 'Confirm & Book Ride',
-            onPressed: _requestRide,
-            gradient: const [Color(0xFF6366F1), Color(0xFF4F46E5)],
-            icon: Icons.check,
-          ),
+  // Redesigned Confirmation Panel (Ola style multi-tier vehicle selector)
+  Widget _buildConfirmationPanel() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1.0,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.35),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          )
         ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30.0),
+        child: GlassPanel(
+          opacity: 0.05,
+          padding: const EdgeInsets.all(22.0),
+          borderRadius: BorderRadius.circular(30.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Select Ride Tier',
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                  ),
+                  GestureDetector(
+                    onTap: () => setState(() => _currentState = PassengerState.idle),
+                    child: CircleAvatar(
+                      radius: 14,
+                      backgroundColor: Colors.white.withValues(alpha: 0.05),
+                      child: const Icon(Icons.close_rounded, color: Colors.white60, size: 14),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Horizontal Category Cards Selector
+              Row(
+                children: [
+                  _buildCategoryCard('Eco', 'Rickshaw Eco', 'Standard Auto', 3),
+                  const SizedBox(width: 8),
+                  _buildCategoryCard('Premium', 'Rickshaw Prime', 'Premium Ride', 3),
+                  const SizedBox(width: 8),
+                  _buildCategoryCard('Shared', 'Rickshaw Share', 'Shared Fare', 2),
+                ],
+              ),
+              const SizedBox(height: 18),
+
+              // Route details
+              _buildAddressRow(Icons.radio_button_checked, const Color(0xFF6366F1), 'PICKUP FROM', _pickupAddress),
+              const SizedBox(height: 12),
+              _buildAddressRow(Icons.place, const Color(0xFFEF4444), 'DROP OFF AT', _dropAddress, isLoading: _isGeocoding),
+
+              const Divider(color: Colors.white10, height: 28),
+
+              // Final Details & Booking Button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('TOTAL EST. FARE', style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '₹${_rideCost.toStringAsFixed(2)}',
+                        style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 24, fontWeight: FontWeight.w900),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text('DISTANCE', style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${_rideDistance.toStringAsFixed(1)} km',
+                        style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              CustomButton(
+                text: 'Confirm Booking • $_selectedCategory',
+                onPressed: _requestRide,
+                gradient: const [Color(0xFF6366F1), Color(0xFF4F46E5)],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildWaitingPanel(ThemeData theme) {
-    return GlassPanel(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  // Category Selector Card Widget
+  Widget _buildCategoryCard(String id, String label, String sub, int cap) {
+    final isSelected = _selectedCategory == id;
+    final accent = id == 'Eco'
+        ? const Color(0xFF818CF8)
+        : id == 'Premium'
+            ? const Color(0xFFFBBF24)
+            : const Color(0xFF34D399);
+
+    double tempCost = 0.0;
+    if (id == 'Eco') {
+      tempCost = _rideDistance * 12.0 + 40.0;
+    } else if (id == 'Premium') {
+      tempCost = _rideDistance * 15.0 + 60.0;
+    } else {
+      tempCost = _rideDistance * 8.0 + 25.0;
+    }
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedCategory = id;
+          });
+          _updatePricing();
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? accent.withValues(alpha: 0.12) : Colors.white.withValues(alpha: 0.015),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: isSelected ? accent : Colors.white.withValues(alpha: 0.05),
+              width: 1.5,
+            ),
+          ),
+          child: Column(
             children: [
+              Icon(
+                Icons.local_taxi_rounded,
+                color: isSelected ? accent : Colors.white38,
+                size: 28,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.white70,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '₹${tempCost.toStringAsFixed(0)}',
+                style: TextStyle(
+                  color: isSelected ? accent : Colors.white38,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Redesigned Waiting Panel (Rapido style radar animation)
+  Widget _buildWaitingPanel() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1.0,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.35),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          )
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30.0),
+        child: GlassPanel(
+          opacity: 0.05,
+          padding: const EdgeInsets.all(24.0),
+          borderRadius: BorderRadius.circular(30.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Circular Pulse Radar Visual
+              Center(
+                child: SizedBox(
+                  width: 90,
+                  height: 90,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Animated pulse rings
+                      AnimatedBuilder(
+                        animation: _radarController,
+                        builder: (context, child) {
+                          return Stack(
+                            alignment: Alignment.center,
+                            children: List.generate(3, (index) {
+                              final delayValue = (index * 0.33);
+                              double val = _radarController.value - delayValue;
+                              if (val < 0) val += 1.0;
+                              return Container(
+                                width: 90 * val,
+                                height: 90 * val,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: const Color(0xFF6366F1).withValues(alpha: 1.0 - val),
+                                    width: 2.0,
+                                  ),
+                                ),
+                              );
+                            }),
+                          );
+                        },
+                      ),
+                      // Core Rickshaw Finder Icon
+                      CircleAvatar(
+                        radius: 22,
+                        backgroundColor: const Color(0xFF6366F1),
+                        child: const Icon(Icons.local_taxi_rounded, color: Colors.white, size: 20),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               const Text(
                 'Searching for Drivers...',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(Colors.amber)),
+              const SizedBox(height: 6),
+              const Text(
+                'Broadcasting request to nearby Rickshaw partners',
+                style: TextStyle(color: Colors.white54, fontSize: 13, height: 1.4),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              CustomButton(
+                text: 'Cancel Request',
+                onPressed: _cancelRide,
+                gradient: const [Color(0xFFEF4444), Color(0xFFDC2626)],
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text(
-            'Your request has been broadcasted to nearby rickshaws. Please wait a moment.',
-            style: TextStyle(color: Colors.white54, fontSize: 13, height: 1.4),
-          ),
-          const SizedBox(height: 20),
-          CustomButton(
-            text: 'Cancel Request',
-            onPressed: _cancelRide,
-            gradient: const [Color(0xFFEF4444), Color(0xFFDC2626)],
-            icon: Icons.cancel_outlined,
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildActiveRidePanel(ThemeData theme) {
-    return GlassPanel(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
+  // Redesigned Active Ride Panel (Uber style driver info profile card)
+  Widget _buildActiveRidePanel() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 1.0,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.35),
+            blurRadius: 28,
+            offset: const Offset(0, 12),
+          )
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30.0),
+        child: GlassPanel(
+          opacity: 0.05,
+          padding: const EdgeInsets.all(24.0),
+          borderRadius: BorderRadius.circular(30.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: Colors.amber.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
-                child: const Text('RIDE IN PROGRESS', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 10)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildAddressRow(Icons.radio_button_checked, Colors.indigoAccent, 'Pickup', _pickupAddress),
-          const SizedBox(height: 12),
-          _buildAddressRow(Icons.place, Colors.redAccent, 'Drop-off', _dropAddress),
-          const Divider(color: Colors.white12, height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // Badge Header
+              Row(
                 children: [
-                  const Text('Total Fare', style: TextStyle(color: Colors.white38, fontSize: 12)),
-                  const SizedBox(height: 4),
-                  Text('₹${_rideCost.toStringAsFixed(2)}', style: const TextStyle(color: Colors.amberAccent, fontSize: 20, fontWeight: FontWeight.w800)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF34D399).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.25)),
+                    ),
+                    child: const Text(
+                      'DRIVER ON THE WAY',
+                      style: TextStyle(color: Color(0xFF34D399), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 0.5),
+                    ),
+                  ),
                 ],
               ),
-              const Text('Driver is on the way', style: TextStyle(color: Colors.white70, fontSize: 13, fontStyle: FontStyle.italic)),
+              const SizedBox(height: 18),
+
+              // Driver profile card (Uber/Ola format)
+              Row(
+                children: [
+                  // Profile Photo
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFF818CF8), width: 1.5),
+                    ),
+                    child: const CircleAvatar(
+                      radius: 26,
+                      backgroundColor: Colors.white10,
+                      child: Icon(Icons.person, color: Colors.white70, size: 28),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  // Name & Star Rating
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Ramesh Kumar', // Static placeholder matching Uber/Ola premium experience
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: const [
+                            Icon(Icons.star_rounded, color: Color(0xFFFBBF24), size: 14),
+                            SizedBox(width: 4),
+                            Text(
+                              '4.9 (248 rides)',
+                              style: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Vehicle Registration Plate Tag
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFBBF24),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                          'MH 12 AB 1234',
+                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 0.5),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Bajaj RE Auto',
+                        style: TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              const Divider(color: Colors.white10, height: 28),
+
+              // Driver Actions Row
+              Row(
+                children: [
+                  // Call button
+                  Expanded(
+                    child: Container(
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.03),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          // Call driver trigger
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Calling driver...'), behavior: SnackBarBehavior.floating),
+                          );
+                        },
+                        icon: const Icon(Icons.call_rounded, color: Color(0xFF818CF8), size: 18),
+                        label: const Text(
+                          'Call Partner',
+                          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  // Cancel button
+                  Expanded(
+                    child: Container(
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEF4444).withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.15)),
+                      ),
+                      child: TextButton.icon(
+                        onPressed: _cancelRide,
+                        icon: const Icon(Icons.close_rounded, color: Color(0xFFEF4444), size: 18),
+                        label: const Text(
+                          'Cancel Ride',
+                          style: TextStyle(color: Color(0xFFEF4444), fontSize: 13, fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -618,14 +1021,17 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: color, size: 20),
+        Icon(icon, color: color, size: 18),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 2),
+              Text(
+                title,
+                style: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.5),
+              ),
+              const SizedBox(height: 4),
               isLoading
                   ? const SizedBox(
                       width: 12,
@@ -634,7 +1040,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                     )
                   : Text(
                       address,
-                      style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.3),
+                      style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.3, fontWeight: FontWeight.w500),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
