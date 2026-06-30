@@ -17,11 +17,18 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(":app")
-    afterEvaluate {
+    val configureAndroid = {
         if (project.hasProperty("android")) {
-            configure<com.android.build.gradle.BaseExtension> {
+            project.configure<com.android.build.gradle.BaseExtension> {
                 compileSdkVersion(34)
             }
+        }
+    }
+    if (project.state.executed) {
+        configureAndroid()
+    } else {
+        project.afterEvaluate {
+            configureAndroid()
         }
     }
 }
