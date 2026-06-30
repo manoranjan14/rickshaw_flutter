@@ -30,6 +30,11 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -247,7 +252,7 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
+                          color: Colors.black.withValues(alpha: 0.25),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         )
@@ -259,22 +264,9 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
                         opacity: 0.04,
                         padding: const EdgeInsets.all(24.0),
                         borderRadius: BorderRadius.circular(30.0),
-                        child: AnimatedBuilder(
-                          animation: _tabController.animation!,
-                          builder: (context, child) {
-                            return SizedBox(
-                              height: _tabController.index == 0 ? 250 : 330,
-                              child: TabBarView(
-                                controller: _tabController,
-                                physics: const NeverScrollableScrollPhysics(), // Managed strictly by tabs
-                                children: [
-                                  _buildLoginForm(),
-                                  _buildRegisterForm(),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                        child: _tabController.index == 0
+                            ? _buildLoginForm()
+                            : _buildRegisterForm(),
                       ),
                     ),
                   ),
@@ -319,7 +311,7 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
               return null;
             },
           ),
-          const Spacer(),
+          const SizedBox(height: 28),
           CustomButton(
             text: 'Sign In',
             isLoading: _isLoading,
@@ -377,7 +369,7 @@ class _DriverAuthScreenState extends State<DriverAuthScreen> with SingleTickerPr
               return null;
             },
           ),
-          const Spacer(),
+          const SizedBox(height: 28),
           CustomButton(
             text: 'Create Account',
             isLoading: _isLoading,

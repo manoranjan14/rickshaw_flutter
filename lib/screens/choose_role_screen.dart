@@ -50,12 +50,12 @@ class ChooseRoleScreen extends StatelessWidget {
 
           // Main Onboarding Layout
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Spacer(flex: 1),
+                  const SizedBox(height: 20),
 
                   // Brand Hero Header
                   Column(
@@ -111,7 +111,7 @@ class ChooseRoleScreen extends StatelessWidget {
                     ],
                   ),
 
-                  const Spacer(flex: 2),
+                  const SizedBox(height: 48),
 
                   // Onboarding Options Title
                   const Text(
@@ -151,7 +151,7 @@ class ChooseRoleScreen extends StatelessWidget {
                     },
                   ),
 
-                  const Spacer(flex: 1),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
