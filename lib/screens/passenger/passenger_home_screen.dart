@@ -146,7 +146,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
     }
   }
 
-  void _onMapDoubleTap(TapPosition tapPosition, LatLng latLng) {
+  void _onMapLongPress(TapPosition tapPosition, LatLng latLng) {
     if (_currentState != PassengerState.idle && _currentState != PassengerState.confirmation) {
       // Prevent changing destination during active/waiting state
       return;
@@ -361,7 +361,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
             options: MapOptions(
               initialCenter: _pickupLocation ?? const LatLng(20.5937, 78.9629), // default center of India
               initialZoom: 15.0,
-              onDoubleTap: _onMapDoubleTap,
+              onLongPress: _onMapLongPress,
             ),
             children: [
               TileLayer(

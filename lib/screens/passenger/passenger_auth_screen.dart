@@ -1,3 +1,4 @@
+import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
@@ -357,4 +358,3 @@ class _PassengerAuthScreenState extends State<PassengerAuthScreen> with SingleTi
 }
 
 // Helper import for Blur
-import 'dart:ui' show ImageFilter;

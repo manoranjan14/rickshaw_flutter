@@ -73,10 +73,10 @@ class RickshawwApp extends StatelessWidget {
             elevation: 0,
             iconTheme: IconThemeData(color: Colors.white),
           ),
-          dialogTheme: DialogTheme(
-            backgroundColor: const Color(0xFF1E293B),
+          dialogTheme: const DialogThemeData(
+            backgroundColor: Color(0xFF1E293B),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.all(Radius.circular(24)),
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'widgets/glass_panel.dart';
 
@@ -92,7 +93,7 @@ class ChooseRoleScreen extends StatelessWidget {
                           color: Colors.white70,
                           letterSpacing: 0.5,
                         ),
-                        textAlign: Center,
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -142,8 +143,7 @@ class ChooseRoleScreen extends StatelessWidget {
   }
 }
 
-// Helper Widget for BackdropFilter
-import 'dart:ui' show ImageFilter;
+// Helper Widget for _RoleCard
 
 class _RoleCard extends StatelessWidget {
   final String title;
