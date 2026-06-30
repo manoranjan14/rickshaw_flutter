@@ -1,4 +1,4 @@
-package com.example.rickshaw_flutter
+package com.example.myapplication
 
 import io.flutter.embedding.android.FlutterActivity
 
