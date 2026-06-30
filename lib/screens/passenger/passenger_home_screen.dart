@@ -44,6 +44,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
   double _rideDistance = 0.0;
   double _rideCost = 0.0;
   bool _isGeocoding = false;
+  bool _isMapReady = false;
 
   // UI State: selected category (Eco, Premium, Shared)
   String _selectedCategory = 'Eco';
@@ -73,46 +74,52 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
     bool serviceEnabled;
     LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location services are disabled.')),
-        );
-      }
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
+    try {
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied.')),
+            const SnackBar(content: Text('Location services are disabled.')),
           );
         }
         return;
       }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permissions are permanently denied.')),
-        );
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Location permissions are denied.')),
+            );
+          }
+          return;
+        }
       }
-      return;
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are permanently denied.')),
+          );
+        }
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition();
+      setState(() {
+        _currentPosition = position;
+        _pickupLocation = LatLng(position.latitude, position.longitude);
+      });
+
+      if (_isMapReady) {
+        _mapController.move(_pickupLocation!, 16.5);
+      }
+      _getPickupAddress();
+    } catch (e) {
+      debugPrint('Error determining location: $e');
     }
-
-    final position = await Geolocator.getCurrentPosition();
-    setState(() {
-      _currentPosition = position;
-      _pickupLocation = LatLng(position.latitude, position.longitude);
-    });
-
-    _mapController.move(_pickupLocation!, 16.5);
-    _getPickupAddress();
   }
 
   Future<void> _getPickupAddress() async {
@@ -416,6 +423,12 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
               initialCenter: _pickupLocation ?? const LatLng(20.5937, 78.9629),
               initialZoom: 15.0,
               onLongPress: _onMapLongPress,
+              onMapReady: () {
+                setState(() => _isMapReady = true);
+                if (_pickupLocation != null) {
+                  _mapController.move(_pickupLocation!, 16.5);
+                }
+              },
             ),
             children: [
               TileLayer(

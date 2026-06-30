@@ -42,6 +42,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   double _rideDistance = 0.0;
   double _rideCost = 0.0;
   bool _isGeocoding = false;
+  bool _isMapReady = false;
 
   // UI State: Online / Offline toggle
   bool _isOnline = true;
@@ -62,37 +63,44 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
   // Location tracking for driver
   Future<void> _startLocationTracking() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return;
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return;
-    }
-
-    // Get initial position
-    final pos = await Geolocator.getCurrentPosition();
-    setState(() {
-      _currentPosition = pos;
-      _driverLocation = LatLng(pos.latitude, pos.longitude);
-    });
-    _mapController.move(_driverLocation!, 15.0);
-
-    // Track real-time position updates
-    _locationSubscription = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
-      ),
-    ).listen((position) {
-      if (mounted && _isOnline) {
-        setState(() {
-          _currentPosition = position;
-          _driverLocation = LatLng(position.latitude, position.longitude);
-        });
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) return;
       }
-    });
+
+      // Get initial position
+      final pos = await Geolocator.getCurrentPosition();
+      setState(() {
+        _currentPosition = pos;
+        _driverLocation = LatLng(pos.latitude, pos.longitude);
+      });
+      
+      if (_isMapReady) {
+        _mapController.move(_driverLocation!, 15.0);
+      }
+
+      // Track real-time position updates
+      _locationSubscription = Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 10,
+        ),
+      ).listen((position) {
+        if (mounted && _isOnline) {
+          setState(() {
+            _currentPosition = position;
+            _driverLocation = LatLng(position.latitude, position.longitude);
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('Error tracking driver location: $e');
+    }
   }
 
   // Listen to pending requests from Firebase
@@ -330,6 +338,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
             options: MapOptions(
               initialCenter: _driverLocation ?? const LatLng(20.5937, 78.9629),
               initialZoom: 14.5,
+              onMapReady: () {
+                setState(() => _isMapReady = true);
+                if (_driverLocation != null) {
+                  _mapController.move(_driverLocation!, 15.0);
+                }
+              },
             ),
             children: [
               TileLayer(
