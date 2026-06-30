@@ -17,6 +17,13 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(":app")
+    afterEvaluate {
+        if (project.hasProperty("android")) {
+            configure<com.android.build.gradle.BaseExtension> {
+                compileSdkVersion(34)
+            }
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {
