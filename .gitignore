@@ -1,0 +1,49 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom
+.buildlog/
+.history
+.project
+.vscode/
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Android
+.gradle/
+local.properties
+**/AndroidManifest.xml.user
+**/AndroidManifest.xml.user.updated
+**/AndroidManifest.xml.user.bak
+*.apk
+*.ap_
+*.dex
+
+# iOS
+*.mode1v3
+*.mode2v3
+*.nib
+*.pbxuser
+*.perspectivev3
+*.xcworkspace
+!default.xcworkspace
+xcuserdata/
+/ios/Flutter/Ephemeral.xcframework
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/ios/Pods/
+/ios/.symlinks/
+
+# Web
+.gcloud/
+node_modules/
