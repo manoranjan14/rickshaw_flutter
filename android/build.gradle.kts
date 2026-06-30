@@ -14,23 +14,17 @@ rootProject.layout.buildDirectory.value(newBuildDir)
 subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
-}
-subprojects {
-    project.evaluationDependsOn(":app")
-    val configureAndroid = {
+    
+    afterEvaluate {
         if (project.hasProperty("android")) {
             project.configure<com.android.build.gradle.BaseExtension> {
                 compileSdkVersion(34)
             }
         }
     }
-    if (project.state.executed) {
-        configureAndroid()
-    } else {
-        project.afterEvaluate {
-            configureAndroid()
-        }
-    }
+}
+subprojects {
+    project.evaluationDependsOn(":app")
 }
 
 tasks.register<Delete>("clean") {
