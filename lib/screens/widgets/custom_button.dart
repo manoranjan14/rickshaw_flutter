@@ -74,7 +74,7 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
             child: child,
           ),
           child: Container(
-            height: 56.0,
+            height: 46.0,
             decoration: BoxDecoration(
               gradient: widget.onPressed != null
                   ? LinearGradient(
@@ -84,13 +84,13 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
                     )
                   : null,
               color: widget.onPressed == null ? Colors.white.withOpacity(0.05) : null,
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(12.0),
               boxShadow: widget.onPressed != null
                   ? [
                       BoxShadow(
                         color: defaultGradient.first.withOpacity(0.3),
-                        blurRadius: 16.0,
-                        offset: const Offset(0, 6),
+                        blurRadius: 12.0,
+                        offset: const Offset(0, 4),
                       ),
                     ]
                   : [],
@@ -101,19 +101,19 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
             alignment: Alignment.center,
             child: widget.isLoading
                 ? const SizedBox(
-                    width: 24,
-                    height: 24,
+                    width: 20,
+                    height: 20,
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      strokeWidth: 2.5,
+                      strokeWidth: 2.0,
                     ),
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (widget.icon != null) ...[
-                        Icon(widget.icon, color: Colors.white, size: 20),
-                        const SizedBox(width: 10),
+                        Icon(widget.icon, color: Colors.white, size: 18),
+                        const SizedBox(width: 8),
                       ],
                       Text(
                         widget.text,
@@ -121,8 +121,8 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
                           color: widget.onPressed != null
                               ? Colors.white
                               : Colors.white.withOpacity(0.3),
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
                         ),
                       ),

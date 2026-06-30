@@ -62,46 +62,46 @@ class ChooseRoleScreen extends StatelessWidget {
                     children: [
                       // Golden Auto-Rickshaw Capsule Icon
                       Container(
-                        padding: const EdgeInsets.all(22.0),
+                        padding: const EdgeInsets.all(16.0),
                         decoration: BoxDecoration(
                           color: const Color(0x15F59E0B), // Rapido Yellow hint
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: const Color(0x35F59E0B),
-                            width: 2.0,
+                            width: 1.5,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
-                              blurRadius: 30,
-                              spreadRadius: 5,
+                              color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
+                              blurRadius: 24,
+                              spreadRadius: 4,
                             )
                           ],
                         ),
                         child: const Icon(
                           Icons.local_taxi_rounded,
-                          size: 56,
+                          size: 44,
                           color: Color(0xFFF59E0B), // Rapido Accent Yellow
                         ),
                       ),
-                      const SizedBox(height: 28),
+                      const SizedBox(height: 20),
                       // App Name
                       const Text(
                         'Rickshaww',
                         style: TextStyle(
-                          fontSize: 36,
+                          fontSize: 28,
                           fontWeight: FontWeight.w900,
                           color: Colors.white,
                           letterSpacing: 0.8,
                           fontFamily: 'Montserrat', // Modern look
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       // Tagline
                       const Text(
                         'Modern, Safe & Instant Rickshaw Booking',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Colors.white54,
                           letterSpacing: 0.3,
@@ -119,7 +119,7 @@ class ChooseRoleScreen extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white30,
                       fontWeight: FontWeight.w800,
-                      fontSize: 12.0,
+                      fontSize: 10.0,
                       letterSpacing: 2.0,
                     ),
                     textAlign: TextAlign.center,
@@ -185,25 +185,25 @@ class _RoleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28.0),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.08),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 24,
-            offset: const Offset(0, 12),
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(28.0),
+        borderRadius: BorderRadius.circular(16.0),
         child: GlassPanel(
           opacity: 0.04,
           padding: EdgeInsets.zero,
-          borderRadius: BorderRadius.circular(28.0),
+          borderRadius: BorderRadius.circular(16.0),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -211,17 +211,17 @@ class _RoleCard extends StatelessWidget {
               splashColor: accentColor.withValues(alpha: 0.15),
               highlightColor: accentColor.withValues(alpha: 0.08),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 26.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Icon Capsule
                     Container(
-                      width: 58,
-                      height: 58,
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: accentColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: accentColor.withValues(alpha: 0.3),
                           width: 1.5,
@@ -230,10 +230,10 @@ class _RoleCard extends StatelessWidget {
                       child: Icon(
                         icon,
                         color: accentColor,
-                        size: 30,
+                        size: 22,
                       ),
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 14),
                     // Details
                     Expanded(
                       child: Column(
@@ -245,23 +245,23 @@ class _RoleCard extends StatelessWidget {
                                 title,
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18.0,
+                                  fontSize: 15.0,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 0.2,
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: accentColor.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
                                   subtitle.toUpperCase(),
                                   style: TextStyle(
                                     color: accentColor,
-                                    fontSize: 9.0,
+                                    fontSize: 8.0,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 0.5,
                                   ),
@@ -269,13 +269,13 @@ class _RoleCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 6),
                           Text(
                             description,
                             style: const TextStyle(
                               color: Colors.white60,
-                              fontSize: 13.0,
-                              height: 1.4,
+                              fontSize: 11.5,
+                              height: 1.45,
                               fontWeight: FontWeight.w400,
                             ),
                           ),

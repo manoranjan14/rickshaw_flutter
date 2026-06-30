@@ -389,16 +389,16 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 // Online/Offline Pill Selector
                 Expanded(
                   child: Container(
-                    height: 52,
+                    height: 44,
                     decoration: BoxDecoration(
                       color: const Color(0xFF131926),
-                      borderRadius: BorderRadius.circular(26),
+                      borderRadius: BorderRadius.circular(22),
                       border: Border.all(color: Colors.white10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.3),
-                          blurRadius: 16,
-                          offset: const Offset(0, 6),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
                         )
                       ],
                     ),
@@ -410,18 +410,18 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                           child: GestureDetector(
                             onTap: () => _toggleOnlineState(false),
                             child: Container(
-                              height: 44,
+                              height: 36,
                               margin: const EdgeInsets.only(left: 4),
                               decoration: BoxDecoration(
                                 color: !_isOnline ? Colors.white.withValues(alpha: 0.06) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(22),
+                                borderRadius: BorderRadius.circular(18),
                               ),
                               alignment: Alignment.center,
                               child: Text(
                                 'OFFLINE',
                                 style: TextStyle(
                                   color: !_isOnline ? Colors.grey[400] : Colors.white24,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 0.5,
                                 ),
@@ -434,17 +434,17 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                           child: GestureDetector(
                             onTap: () => _toggleOnlineState(true),
                             child: Container(
-                              height: 44,
+                              height: 36,
                               margin: const EdgeInsets.only(right: 4),
                               decoration: BoxDecoration(
                                 color: _isOnline ? const Color(0xFFF59E0B) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(22),
+                                borderRadius: BorderRadius.circular(18),
                                 boxShadow: _isOnline
                                     ? [
                                         BoxShadow(
                                           color: const Color(0xFFF59E0B).withValues(alpha: 0.25),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 3),
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 2),
                                         )
                                       ]
                                     : [],
@@ -454,7 +454,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                                 'GO ONLINE',
                                 style: TextStyle(
                                   color: _isOnline ? Colors.black : Colors.white24,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 0.5,
                                 ),
@@ -477,26 +477,26 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 color: Colors.black.withValues(alpha: 0.4),
                 child: Center(
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 40),
-                    padding: const EdgeInsets.all(24),
+                    margin: const EdgeInsets.symmetric(horizontal: 48),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: const Color(0xFF131926),
-                      borderRadius: BorderRadius.circular(28),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: Colors.white10),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: const [
-                        Icon(Icons.wifi_off_rounded, color: Colors.white30, size: 48),
-                        SizedBox(height: 16),
+                        Icon(Icons.wifi_off_rounded, color: Colors.white30, size: 36),
+                        SizedBox(height: 12),
                         Text(
                           'You are Offline',
-                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                          style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 6),
                         Text(
                           'Toggle the "GO ONLINE" switch at the top to receive incoming passenger requests.',
-                          style: TextStyle(color: Colors.white54, fontSize: 13, height: 1.4),
+                          style: TextStyle(color: Colors.white54, fontSize: 11.5, height: 1.4),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -510,52 +510,52 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
           if (_isOnline && _currentState == DriverState.searching)
             Positioned(
               bottom: 24,
-              left: 20,
-              right: 20,
+              left: 16,
+              right: 16,
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24.0),
+                  borderRadius: BorderRadius.circular(16.0),
                   border: Border.all(
                     color: Colors.white.withValues(alpha: 0.08),
                     width: 1.0,
                   ),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24.0),
+                  borderRadius: BorderRadius.circular(16.0),
                   child: GlassPanel(
                     opacity: 0.05,
-                    padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                    borderRadius: BorderRadius.circular(24.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    borderRadius: BorderRadius.circular(16.0),
                     child: Row(
                       children: [
                         const SizedBox(
-                          width: 18,
-                          height: 18,
+                          width: 14,
+                          height: 14,
                           child: CircularProgressIndicator(
-                            strokeWidth: 2,
+                            strokeWidth: 1.5,
                             valueColor: AlwaysStoppedAnimation(Color(0xFFF59E0B)),
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         const Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Finding requests...',
-                                style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Colors.white, fontSize: 13.5, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 2),
                               Text(
                                 'Requests will appear as red pins on the map',
-                                style: TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.w500),
+                                style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                         ),
                         Text(
                           '${_pendingRides.length} active',
-                          style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 12, fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -608,25 +608,25 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   Widget _buildDetailsPanel() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.08),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         child: GlassPanel(
           opacity: 0.05,
-          padding: const EdgeInsets.all(22.0),
-          borderRadius: BorderRadius.circular(30.0),
+          padding: const EdgeInsets.all(16.0),
+          borderRadius: BorderRadius.circular(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -635,36 +635,36 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEF4444).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                       border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.25)),
                     ),
                     child: const Text(
                       'INCOMING RIDE REQUEST',
-                      style: TextStyle(color: Color(0xFFEF4444), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 0.5),
+                      style: TextStyle(color: Color(0xFFEF4444), fontWeight: FontWeight.w900, fontSize: 8, letterSpacing: 0.5),
                     ),
                   ),
                   const Spacer(),
                   GestureDetector(
                     onTap: () => setState(() => _currentState = DriverState.searching),
                     child: CircleAvatar(
-                      radius: 14,
+                      radius: 12,
                       backgroundColor: Colors.white.withValues(alpha: 0.05),
-                      child: const Icon(Icons.close_rounded, color: Colors.white60, size: 14),
+                      child: const Icon(Icons.close_rounded, color: Colors.white60, size: 12),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 14),
 
               // Pickup & Drop
               _buildAddressRow(Icons.radio_button_checked_rounded, const Color(0xFF6366F1), 'PICKUP FROM', _pickupAddress),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               _buildAddressRow(Icons.place_rounded, const Color(0xFFEF4444), 'DROP OFF TO', _dropAddress, isLoading: _isGeocoding),
 
-              const Divider(color: Colors.white10, height: 28),
+              const Divider(color: Colors.white10, height: 20),
 
               // Ride Metrics Info
               Row(
@@ -673,28 +673,28 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('YOUR NET EARNING', style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
+                      const Text('YOUR NET EARNING', style: TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 2),
                       Text(
                         '₹${_rideCost.toStringAsFixed(2)}',
-                        style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 24, fontWeight: FontWeight.w900),
+                        style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 18, fontWeight: FontWeight.w900),
                       ),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text('RIDE DISTANCE', style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
+                      const Text('RIDE DISTANCE', style: TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 2),
                       Text(
                         '${_rideDistance.toStringAsFixed(1)} km',
-                        style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+                        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 22),
+              const SizedBox(height: 14),
 
               // Swipe to Accept Button
               SwipeToAcceptButton(
@@ -711,25 +711,25 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   Widget _buildActiveRidePanel() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.08),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         child: GlassPanel(
           opacity: 0.05,
-          padding: const EdgeInsets.all(22.0),
-          borderRadius: BorderRadius.circular(30.0),
+          padding: const EdgeInsets.all(16.0),
+          borderRadius: BorderRadius.circular(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -737,39 +737,39 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFBBF24).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                       border: Border.all(color: const Color(0xFFFBBF24).withValues(alpha: 0.25)),
                     ),
                     child: const Text(
                       'ACTIVE TRIP IN PROGRESS',
-                      style: TextStyle(color: Color(0xFFFBBF24), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 0.5),
+                      style: TextStyle(color: Color(0xFFFBBF24), fontWeight: FontWeight.w900, fontSize: 8, letterSpacing: 0.5),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
-              _buildAddressRow(Icons.radio_button_checked_rounded, const Color(0xFF6366F1), 'PICKING UP FROM', _pickupAddress),
               const SizedBox(height: 12),
+              _buildAddressRow(Icons.radio_button_checked_rounded, const Color(0xFF6366F1), 'PICKING UP FROM', _pickupAddress),
+              const SizedBox(height: 8),
               _buildAddressRow(Icons.place_rounded, const Color(0xFFEF4444), 'DELIVERING TO', _dropAddress),
-              const Divider(color: Colors.white10, height: 28),
+              const Divider(color: Colors.white10, height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('FARE VALUE', style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
-                      Text('₹${_rideCost.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 20, fontWeight: FontWeight.w900)),
+                      const Text('FARE VALUE', style: TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 2),
+                      Text('₹${_rideCost.toStringAsFixed(2)}', style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 16, fontWeight: FontWeight.w900)),
                     ],
                   ),
-                  const Text('Navigating towards drop-off', style: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w500)),
+                  const Text('Navigating towards drop-off', style: TextStyle(color: Colors.white54, fontSize: 11.5, fontWeight: FontWeight.w500)),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
               CustomButton(
                 text: 'End Trip & Complete',
                 onPressed: _completeRide,
@@ -833,15 +833,15 @@ class _SwipeToAcceptButtonState extends State<SwipeToAcceptButton> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 58,
+      height: 46,
       decoration: BoxDecoration(
         color: const Color(0xFFFBBF24).withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(29),
+        borderRadius: BorderRadius.circular(23),
         border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.15)),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final maxSlide = constraints.maxWidth - 58;
+          final maxSlide = constraints.maxWidth - 46;
           return Stack(
             children: [
               // Background Slide instructions
@@ -850,7 +850,7 @@ class _SwipeToAcceptButtonState extends State<SwipeToAcceptButton> {
                   'SWIPE RIGHT TO ACCEPT',
                   style: TextStyle(
                     color: Color(0xFFFBBF24),
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1.0,
                   ),
@@ -874,8 +874,8 @@ class _SwipeToAcceptButtonState extends State<SwipeToAcceptButton> {
                     });
                   },
                   child: Container(
-                    width: 52,
-                    height: 52,
+                    width: 40,
+                    height: 40,
                     margin: const EdgeInsets.all(2),
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -883,7 +883,7 @@ class _SwipeToAcceptButtonState extends State<SwipeToAcceptButton> {
                       ),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.arrow_forward_rounded, color: Colors.black, size: 24),
+                    child: const Icon(Icons.arrow_forward_rounded, color: Colors.black, size: 18),
                   ),
                 ),
               ),

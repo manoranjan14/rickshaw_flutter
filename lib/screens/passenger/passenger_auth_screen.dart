@@ -165,7 +165,7 @@ class _PassengerAuthScreenState extends State<PassengerAuthScreen> with SingleTi
                   // Header Block (Uber Style)
                   Center(
                     child: Container(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
                         color: const Color(0xFF6366F1).withValues(alpha: 0.12),
                         shape: BoxShape.circle,
@@ -176,41 +176,41 @@ class _PassengerAuthScreenState extends State<PassengerAuthScreen> with SingleTi
                       ),
                       child: const Icon(
                         Icons.person_pin_circle_rounded,
-                        size: 40,
+                        size: 32,
                         color: Color(0xFF818CF8),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
                   const Text(
                     'Passenger Hub',
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 24,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                       letterSpacing: 0.5,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   const Text(
                     'Access your passenger account to request rides',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: Colors.white54,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 36),
+                  const SizedBox(height: 28),
 
                   // Pill-style Tab Switcher
                   Container(
-                    height: 56,
+                    height: 46,
                     padding: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.03),
-                      borderRadius: BorderRadius.circular(20.0),
+                      borderRadius: BorderRadius.circular(14.0),
                       border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
                     ),
                     child: TabBar(
@@ -225,45 +225,45 @@ class _PassengerAuthScreenState extends State<PassengerAuthScreen> with SingleTi
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(16.0),
+                        borderRadius: BorderRadius.circular(10.0),
                         boxShadow: [
                           BoxShadow(
                             color: const Color(0xFF4F46E5).withValues(alpha: 0.35),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
                           )
                         ],
                       ),
                       tabs: const [
-                        Tab(child: Text('Sign In', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
-                        Tab(child: Text('Register', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15))),
+                        Tab(child: Text('Sign In', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5))),
+                        Tab(child: Text('Register', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5))),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
                   // Dynamic Form Card (Glassmorphic)
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(16.0),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.08),
                         width: 1.0,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.25),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 16,
+                          offset: const Offset(0, 8),
                         )
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(16.0),
                       child: GlassPanel(
                         opacity: 0.04,
-                        padding: const EdgeInsets.all(24.0),
-                        borderRadius: BorderRadius.circular(30.0),
+                        padding: const EdgeInsets.all(16.0),
+                        borderRadius: BorderRadius.circular(16.0),
                         child: _tabController.index == 0
                             ? _buildLoginForm()
                             : _buildRegisterForm(),
@@ -392,7 +392,7 @@ class _PassengerAuthScreenState extends State<PassengerAuthScreen> with SingleTi
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: TextFormField(
@@ -400,13 +400,13 @@ class _PassengerAuthScreenState extends State<PassengerAuthScreen> with SingleTi
         obscureText: obscureText,
         keyboardType: keyboardType,
         validator: validator,
-        style: const TextStyle(color: Colors.white, fontSize: 15.0, fontWeight: FontWeight.w500),
+        style: const TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.white38, fontSize: 13.0, fontWeight: FontWeight.w500),
-          prefixIcon: Icon(icon, color: const Color(0xFF818CF8), size: 20),
+          labelStyle: const TextStyle(color: Colors.white38, fontSize: 12.0, fontWeight: FontWeight.w500),
+          prefixIcon: Icon(icon, color: const Color(0xFF818CF8), size: 18),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 11),
         ),
       ),

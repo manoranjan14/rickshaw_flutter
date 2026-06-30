@@ -453,12 +453,12 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
           // Uber-style Floating Top Header (Profile + Search Input)
           if (_currentState == PassengerState.idle)
             Positioned(
-              top: 54,
-              left: 20,
-              right: 20,
+              top: 48,
+              left: 16,
+              right: 16,
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28.0),
+                  borderRadius: BorderRadius.circular(16.0),
                   border: Border.all(
                     color: Colors.white.withValues(alpha: 0.08),
                     width: 1.0,
@@ -466,29 +466,29 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.25),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
                     )
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(28.0),
+                  borderRadius: BorderRadius.circular(16.0),
                   child: GlassPanel(
                     opacity: 0.08,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    borderRadius: BorderRadius.circular(28.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    borderRadius: BorderRadius.circular(16.0),
                     child: Row(
                       children: [
                         // Profile Avatar / Logout trigger
                         GestureDetector(
                           onTap: _handleLogout,
                           child: CircleAvatar(
-                            radius: 20,
+                            radius: 16,
                             backgroundColor: const Color(0xFF6366F1).withValues(alpha: 0.15),
-                            child: const Icon(Icons.logout_rounded, color: Color(0xFF818CF8), size: 18),
+                            child: const Icon(Icons.logout_rounded, color: Color(0xFF818CF8), size: 14),
                           ),
                         ),
-                        const SizedBox(width: 14),
+                        const SizedBox(width: 10),
                         // Simulated Search Bar
                         const Expanded(
                           child: Column(
@@ -496,17 +496,17 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                             children: [
                               Text(
                                 'Where to?',
-                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
+                                style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800),
                               ),
-                              SizedBox(height: 2),
+                              SizedBox(height: 1),
                               Text(
                                 'Long-press map to drop destination pin',
-                                style: TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.w500),
+                                style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                         ),
-                        const Icon(Icons.search_rounded, color: Colors.white54),
+                        const Icon(Icons.search_rounded, color: Colors.white54, size: 18),
                       ],
                     ),
                   ),
@@ -594,25 +594,25 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
   Widget _buildConfirmationPanel() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.08),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         child: GlassPanel(
           opacity: 0.05,
-          padding: const EdgeInsets.all(22.0),
-          borderRadius: BorderRadius.circular(30.0),
+          padding: const EdgeInsets.all(16.0),
+          borderRadius: BorderRadius.circular(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -623,19 +623,19 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                 children: [
                   const Text(
                     'Select Ride Tier',
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                    style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800),
                   ),
                   GestureDetector(
                     onTap: () => setState(() => _currentState = PassengerState.idle),
                     child: CircleAvatar(
-                      radius: 14,
+                      radius: 12,
                       backgroundColor: Colors.white.withValues(alpha: 0.05),
-                      child: const Icon(Icons.close_rounded, color: Colors.white60, size: 14),
+                      child: const Icon(Icons.close_rounded, color: Colors.white60, size: 12),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               // Horizontal Category Cards Selector
               Row(
@@ -647,14 +647,14 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                   _buildCategoryCard('Shared', 'Rickshaw Share', 'Shared Fare', 2),
                 ],
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 14),
 
               // Route details
               _buildAddressRow(Icons.radio_button_checked, const Color(0xFF6366F1), 'PICKUP FROM', _pickupAddress),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               _buildAddressRow(Icons.place, const Color(0xFFEF4444), 'DROP OFF AT', _dropAddress, isLoading: _isGeocoding),
 
-              const Divider(color: Colors.white10, height: 28),
+              const Divider(color: Colors.white10, height: 20),
 
               // Final Details & Booking Button
               Row(
@@ -663,28 +663,28 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('TOTAL EST. FARE', style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
+                      const Text('TOTAL EST. FARE', style: TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 2),
                       Text(
                         '₹${_rideCost.toStringAsFixed(2)}',
-                        style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 24, fontWeight: FontWeight.w900),
+                        style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 18, fontWeight: FontWeight.w900),
                       ),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text('DISTANCE', style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 4),
+                      const Text('DISTANCE', style: TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 2),
                       Text(
                         '${_rideDistance.toStringAsFixed(1)} km',
-                        style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700),
+                        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
               CustomButton(
                 text: 'Confirm Booking • $_selectedCategory',
                 onPressed: _requestRide,
@@ -725,10 +725,10 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           decoration: BoxDecoration(
             color: isSelected ? accent.withValues(alpha: 0.12) : Colors.white.withValues(alpha: 0.015),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected ? accent : Colors.white.withValues(alpha: 0.05),
               width: 1.5,
@@ -739,14 +739,14 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
               Icon(
                 Icons.local_taxi_rounded,
                 color: isSelected ? accent : Colors.white38,
-                size: 28,
+                size: 22,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
                   color: isSelected ? Colors.white : Colors.white70,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w800,
                 ),
                 textAlign: TextAlign.center,
@@ -756,7 +756,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                 '₹${tempCost.toStringAsFixed(0)}',
                 style: TextStyle(
                   color: isSelected ? accent : Colors.white38,
-                  fontSize: 13,
+                  fontSize: 11.5,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -771,25 +771,25 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
   Widget _buildWaitingPanel() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.08),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         child: GlassPanel(
           opacity: 0.05,
-          padding: const EdgeInsets.all(24.0),
-          borderRadius: BorderRadius.circular(30.0),
+          padding: const EdgeInsets.all(16.0),
+          borderRadius: BorderRadius.circular(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -797,8 +797,8 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
               // Circular Pulse Radar Visual
               Center(
                 child: SizedBox(
-                  width: 90,
-                  height: 90,
+                  width: 70,
+                  height: 70,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -813,13 +813,13 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                               double val = _radarController.value - delayValue;
                               if (val < 0) val += 1.0;
                               return Container(
-                                width: 90 * val,
-                                height: 90 * val,
+                                width: 70 * val,
+                                height: 70 * val,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     color: const Color(0xFF6366F1).withValues(alpha: 1.0 - val),
-                                    width: 2.0,
+                                    width: 1.5,
                                   ),
                                 ),
                               );
@@ -829,27 +829,27 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                       ),
                       // Core Rickshaw Finder Icon
                       CircleAvatar(
-                        radius: 22,
+                        radius: 18,
                         backgroundColor: const Color(0xFF6366F1),
-                        child: const Icon(Icons.local_taxi_rounded, color: Colors.white, size: 20),
+                        child: const Icon(Icons.local_taxi_rounded, color: Colors.white, size: 16),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
               const Text(
                 'Searching for Drivers...',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
+                style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               const Text(
                 'Broadcasting request to nearby Rickshaw partners',
-                style: TextStyle(color: Colors.white54, fontSize: 13, height: 1.4),
+                style: TextStyle(color: Colors.white54, fontSize: 11.5, height: 1.4),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 18),
               CustomButton(
                 text: 'Cancel Request',
                 onPressed: _cancelRide,
@@ -866,25 +866,25 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
   Widget _buildActiveRidePanel() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.08),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 28,
-            offset: const Offset(0, 12),
+            color: Colors.black.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(16.0),
         child: GlassPanel(
           opacity: 0.05,
-          padding: const EdgeInsets.all(24.0),
-          borderRadius: BorderRadius.circular(30.0),
+          padding: const EdgeInsets.all(16.0),
+          borderRadius: BorderRadius.circular(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -893,20 +893,20 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
                       color: const Color(0xFF34D399).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                       border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.25)),
                     ),
                     child: const Text(
                       'DRIVER ON THE WAY',
-                      style: TextStyle(color: Color(0xFF34D399), fontWeight: FontWeight.w900, fontSize: 9, letterSpacing: 0.5),
+                      style: TextStyle(color: Color(0xFF34D399), fontWeight: FontWeight.w900, fontSize: 8, letterSpacing: 0.5),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: 12),
 
               // Driver profile card (Uber/Ola format)
               Row(
@@ -918,12 +918,12 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                       border: Border.all(color: const Color(0xFF818CF8), width: 1.5),
                     ),
                     child: const CircleAvatar(
-                      radius: 26,
+                      radius: 20,
                       backgroundColor: Colors.white10,
-                      child: Icon(Icons.person, color: Colors.white70, size: 28),
+                      child: Icon(Icons.person, color: Colors.white70, size: 20),
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 10),
                   // Name & Star Rating
                   Expanded(
                     child: Column(
@@ -931,16 +931,16 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                       children: [
                         const Text(
                           'Ramesh Kumar', // Static placeholder matching Uber/Ola premium experience
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800),
+                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 2),
                         Row(
                           children: const [
-                            Icon(Icons.star_rounded, color: Color(0xFFFBBF24), size: 14),
+                            Icon(Icons.star_rounded, color: Color(0xFFFBBF24), size: 12),
                             SizedBox(width: 4),
                             Text(
                               '4.9 (248 rides)',
-                              style: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w600),
+                              style: TextStyle(color: Colors.white54, fontSize: 11, fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -952,27 +952,27 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFBBF24),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: const Text(
                           'MH 12 AB 1234',
-                          style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 0.5),
+                          style: TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.5),
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                       const Text(
                         'Bajaj RE Auto',
-                        style: TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
                 ],
               ),
 
-              const Divider(color: Colors.white10, height: 28),
+              const Divider(color: Colors.white10, height: 20),
 
               // Driver Actions Row
               Row(
@@ -980,10 +980,10 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                   // Call button
                   Expanded(
                     child: Container(
-                      height: 52,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.03),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
                       ),
                       child: TextButton.icon(
@@ -993,10 +993,10 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                             const SnackBar(content: Text('Calling driver...'), behavior: SnackBarBehavior.floating),
                           );
                         },
-                        icon: const Icon(Icons.call_rounded, color: Color(0xFF818CF8), size: 18),
+                        icon: const Icon(Icons.call_rounded, color: Color(0xFF818CF8), size: 16),
                         label: const Text(
                           'Call Partner',
-                          style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w800),
+                          style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
                         ),
                       ),
                     ),
@@ -1005,18 +1005,18 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> with TickerPr
                   // Cancel button
                   Expanded(
                     child: Container(
-                      height: 52,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: const Color(0xFFEF4444).withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.15)),
                       ),
                       child: TextButton.icon(
                         onPressed: _cancelRide,
-                        icon: const Icon(Icons.close_rounded, color: Color(0xFFEF4444), size: 18),
+                        icon: const Icon(Icons.close_rounded, color: Color(0xFFEF4444), size: 16),
                         label: const Text(
                           'Cancel Ride',
-                          style: TextStyle(color: Color(0xFFEF4444), fontSize: 13, fontWeight: FontWeight.w800),
+                          style: TextStyle(color: Color(0xFFEF4444), fontSize: 12, fontWeight: FontWeight.w800),
                         ),
                       ),
                     ),
